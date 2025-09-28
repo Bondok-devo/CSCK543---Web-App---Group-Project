@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Web App - Home</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Recipe Web App</h1>
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="search.html">Search</a>
+            <a href="account.html">Account</a>
+            <a href="login.html">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Discover Delicious Recipes</h2>
+            <form action="search.html" method="get" class="search-bar">
+                <input type="text" name="q" placeholder="Search recipes...">
+                <button type="submit">Search</button>
+            </form>
+        </section>
+
+        <section class="featured">
+            <h2>Featured Recipes</h2>
+            <div class="recipe-grid">
+                <article class="recipe-card">
+                    <h3>Spaghetti Bolognese</h3>
+                    <a href="recipe.html">View Recipe</a>
+                </article>
+                <article class="recipe-card">
+                    <h3>Vegan Pancakes</h3>
+                    <a href="recipe.html">View Recipe</a>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Recipe Web App</p>
+    </footer>
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>
