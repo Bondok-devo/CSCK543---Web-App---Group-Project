@@ -14,7 +14,7 @@ $dbHost    = getenv('DB_HOST') ?: '127.0.0.1';
 $dbPort    = (int) (getenv('DB_PORT') ?: 3306);
 $dbName    = getenv('DB_NAME') ?: 'Recipe_web_app';
 $dbUser    = getenv('DB_USER') ?: 'root';
-$dbPass    = getenv('DB_PASS') ?: 'fyzmo2-cemnax-guCjum';
+$dbPass    = getenv('DB_PASS') ?: '';
 $dbCharset = 'utf8mb4';
 
 // Base URL:
