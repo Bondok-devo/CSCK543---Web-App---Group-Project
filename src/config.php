@@ -46,7 +46,6 @@ return [
         'charset' => $dbCharset,
     ],
     'app' => [
-        // Example: "/CSCK543---Web-App---Group-Project" (no trailing slash)
         'base_url'            => $baseUrl,
         'force_secure_cookies'=> $forceSecureCookies,
     ],
