@@ -1,74 +1,60 @@
 <?php
-/**
- * File: results.php
- * Purpose: Displays the results of a user's search query.
- */
+// File: public/results.php
 declare(strict_types=1);
 require_once __DIR__ . '/../src/includes/header.php';
 
-// Sanitize the search term from the URL query string.
 $search_term = trim($_GET['q'] ?? '');
-?>
-
-<h2>Results for "<?= e($search_term) ?>"</h2>
-
-<?php
-if (empty($search_term)) {
-    echo "<p>Please enter a search term on the homepage to find recipes.</p>";
-} else {
-    // This robust query joins recipes with ingredients and uses GROUP BY to ensure each recipe appears only once.
-    // It searches against both the recipe's text and the names of its ingredients.
-    $sql = "
-        SELECT
-            r.id,
-            r.title,
-            r.summary,
-            r.image_url
-        FROM
-            recipes r
-        LEFT JOIN
-            recipe_ingredients ri ON r.id = ri.recipe_id
-        LEFT JOIN
-            ingredients i ON ri.ingredient_id = i.id
-        WHERE
-            -- Condition 1: Match against the recipe's title and summary using FULLTEXT search.
-            MATCH(r.title, r.summary) AGAINST(? IN NATURAL LANGUAGE MODE)
-            -- Condition 2: Match against the ingredient's name.
-            OR i.name LIKE ?
-        -- Group by the recipe ID to collapse all duplicates into a single result per recipe.
-        GROUP BY
-            r.id
-        ORDER BY
-            r.title
-    ";
-    
-    $stmt = $pdo->prepare($sql);
-    
-    // Bind the search term for the ingredient 'LIKE' search with wildcards.
-    $like_term = '%' . $search_term . '%';
-    
-    // The search term is bound twice, once for the FULLTEXT search and once for the LIKE search.
-    $stmt->execute([$search_term, $like_term]);
-    
-    $results = $stmt->fetchAll();
-
-    if ($results) {
-        echo '<div class="recipe-grid">';
-        foreach ($results as $recipe) {
-            echo '<article class="recipe-card">';
-            if (!empty($recipe['image_url'])) {
-                echo '<img src="' . e($base_url . $recipe['image_url']) . '" alt="' . e($recipe['title']) . '" class="recipe-card-image">';
-            }
-            echo '<h3>' . e($recipe['title']) . '</h3>';
-            echo '<p>' . e(substr($recipe['summary'] ?? '', 0, 100)) . '...</p>';
-            echo '<a href="recipe.php?id=' . e((string)$recipe['id']) . '">View Recipe</a>';
-            echo '</article>';
-        }
-        echo '</div>';
-    } else {
-        echo '<p>No recipes found matching your search for "' . e($search_term) . '".</p>';
+$category_filters = isset($_GET['categories']) && is_array($_GET['categories']) ? $_GET['categories'] : [];
+$category_filters = array_filter($category_filters, 'is_numeric');
+$params = [];
+$where_clauses = [];
+if (!empty($search_term)) {
+    $where_clauses[] = "(MATCH(r.title, r.summary) AGAINST(? IN NATURAL LANGUAGE MODE) OR i.name LIKE ?)";
+    $params[] = $search_term;
+    $params[] = '%' . $search_term . '%';
+}
+if (!empty($category_filters)) {
+    $placeholders = implode(',', array_fill(0, count($category_filters), '?'));
+    $where_clauses[] = "r.id IN (SELECT recipe_id FROM recipe_categories WHERE category_id IN ($placeholders))";
+    foreach ($category_filters as $cat_id) {
+        $params[] = (int)$cat_id;
     }
 }
+$sql = "SELECT DISTINCT r.id, r.title, r.summary, r.cook_time, r.image_url FROM recipes r LEFT JOIN recipe_ingredients ri ON r.id = ri.recipe_id LEFT JOIN ingredients i ON ri.ingredient_id = i.id";
+if (!empty($where_clauses)) {
+    $sql .= " WHERE " . implode(' AND ', $where_clauses);
+}
+$sql .= " GROUP BY r.id ORDER BY r.title";
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+$results = $stmt->fetchAll();
 ?>
-
+<div class="main-layout">
+    <?php require_once __DIR__ . '/../src/includes/sidebar.php'; ?>
+    <div class="content-area">
+        <h2>Search Results</h2>
+        <?php if ($results): ?>
+            <div class="recipe-grid">
+            <?php foreach ($results as $recipe): ?>
+                <article class="recipe-card">
+                    <?php if (!empty($recipe['image_url'])):
+                        // Create and use the thumbnail path for the grid
+                        $thumb_url = str_replace('.jpg', '_thumb.jpg', $recipe['image_url']);
+                    ?>
+                        <img src="<?= e($base_url . '/public' . $thumb_url) ?>" alt="<?= e($recipe['title']) ?>" class="recipe-card-image" loading="lazy" width="400" height="225">
+                    <?php endif; ?>
+                    <div class="recipe-card-content">
+                        <h3><?= e($recipe['title']) ?></h3>
+                        <p><?= e(substr($recipe['summary'] ?? '', 0, 80)) ?>...</p>
+                        <p class="recipe-card-time"><strong>Cook time:</strong> <?= e($recipe['cook_time']) ?></p>
+                        <a href="recipe.php?id=<?= e((string)$recipe['id']) ?>" class="button-link">View Recipe</a>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <p>No recipes found matching your criteria. Try adjusting your search or filters.</p>
+        <?php endif; ?>
+    </div>
+</div>
 <?php require_once __DIR__ . '/../src/includes/footer.php'; ?>
