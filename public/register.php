@@ -75,7 +75,7 @@ require_once __DIR__ . '/../src/includes/header.php';
 ?>
 
 <div class="auth-container">
-    <form class="auth-form" action="register.php" method="post">
+    <form class="auth-form" action="register.php" method="post" novalidate>
         <h2>Create an Account</h2>
         <p>Join our community to save your favourite recipes.</p>
 
