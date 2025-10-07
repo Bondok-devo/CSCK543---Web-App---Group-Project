@@ -32,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Attempt to log the user in.
     if (login($pdo, $email_input, $password)) {
         // On success, redirect to the account page.
-        // This now works because no HTML has been sent yet.
         header('Location: account.php');
         exit;
     } else {
