@@ -26,7 +26,7 @@ if (current_user_id()) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
 
-    // Sanitize and validate inputs.
+    // Sanitise and validate inputs.
     $inputs['name'] = trim($_POST['name'] ?? '');
     $inputs['email'] = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
