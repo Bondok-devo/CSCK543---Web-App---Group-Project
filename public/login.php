@@ -45,7 +45,7 @@ require_once __DIR__ . '/../src/includes/header.php';
 ?>
 
 <div class="auth-container">
-    <form class="auth-form" action="login.php" method="post">
+    <form class="auth-form" action="login.php" method="post" novalidate>
         <h2>Sign In</h2>
 
         <?php if (isset($errors['credentials'])): ?>
