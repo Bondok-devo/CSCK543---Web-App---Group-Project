@@ -41,6 +41,7 @@ if ($current_user_id) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Savoury Spoon</title>
     <link rel="stylesheet" href="<?= $base_url ?>/public/assets/css/style.css">
+    <link rel="icon" type="image/x-icon" href="<?= $base_url ?>/public/assets/images/favicon.ico">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -75,4 +76,3 @@ if ($current_user_id) {
 </header>
 <main id="main" class="container" tabindex="-1">
     <div id="toast" role="status" aria-live="polite" class="alert" hidden></div>
-    
