@@ -1,50 +1,47 @@
 document.addEventListener("DOMContentLoaded", () => {
     
-    // ========= COMBINED FILTER LOGIC (FIX) =========
-    const filterForm = document.getElementById('filter-form');
-    if (filterForm) {
-        // --- Preference Toggle Logic ---
-        const prefToggle = document.getElementById('pref-toggle');
-        if (prefToggle) {
-            const userPreferences = JSON.parse(prefToggle.dataset.preferences || '[]');
-            const categoryCheckboxes = filterForm.querySelectorAll('input[name="categories[]"]');
+    // ========= PREFERENCE TOGGLE =========
+    const prefToggle = document.getElementById('pref-toggle');
+    if (prefToggle) {
+        const userPreferences = JSON.parse(prefToggle.dataset.preferences || '[]');
+        const filterForm = document.getElementById('filter-form');
+        const categoryCheckboxes = filterForm.querySelectorAll('input[name="categories[]"]');
 
-            prefToggle.addEventListener('change', () => {
-                categoryCheckboxes.forEach(checkbox => {
-                    checkbox.checked = false;
+        prefToggle.addEventListener('change', () => {
+            categoryCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+            if (prefToggle.checked && userPreferences.length > 0) {
+                userPreferences.forEach(prefId => {
+                    const checkboxToSelect = filterForm.querySelector(`input[name="categories[]"][value="${prefId}"]`);
+                    if (checkboxToSelect) {
+                        checkboxToSelect.checked = true;
+                    }
                 });
-
-                if (prefToggle.checked && userPreferences.length > 0) {
-                    userPreferences.forEach(prefId => {
-                        const checkboxToSelect = filterForm.querySelector(`input[name="categories[]"][value="${prefId}"]`);
-                        if (checkboxToSelect) {
-                            checkboxToSelect.checked = true;
-                        }
-                    });
-                }
-                
-                // Submit the form to apply the preference changes
-                filterForm.submit();
-            });
-        }
-
-        // --- Auto-submit on other filter changes (Desktop only) ---
-        if (window.innerWidth >= 900) {
-            const submitButton = filterForm.querySelector('.mobile-only-submit');
-            if (submitButton) {
-                submitButton.style.display = 'none';
             }
+            
+            if (window.innerWidth >= 900) {
+                filterForm.submit();
+            }
+        });
+    }
 
-            filterForm.addEventListener('change', (e) => {
-                // IMPORTANT: Only submit if the change was NOT from the preference toggle
-                if (e.target.id !== 'pref-toggle') {
-                    // Short delay to allow UI to update before submitting
-                    setTimeout(() => {
-                        filterForm.submit();
-                    }, 100);
-                }
-            });
+    // Auto-submit filter form on desktop only
+    const filterForm = document.getElementById('filter-form');
+    if (filterForm && window.innerWidth >= 900) {
+        const submitButton = filterForm.querySelector('.mobile-only-submit');
+        if (submitButton) {
+            submitButton.style.display = 'none';
         }
+
+        filterForm.addEventListener('change', (e) => {
+            if (e.target.id !== 'pref-toggle') {
+                setTimeout(() => {
+                    filterForm.submit();
+                }, 100);
+            }
+        });
     }
 
     // Remember collapsible category state
@@ -69,17 +66,26 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ========= USER DROPDOWN MENU =========
+    // ========= USER DROPDOWN MENU (CORRECTED) =========
     const userMenu = document.querySelector(".user-menu");
     if (userMenu) {
         const userMenuButton = userMenu.querySelector(".user-menu-button");
         userMenuButton.addEventListener("click", (e) => {
             e.stopPropagation();
+            
+            // --- FIX: Toggle ARIA attribute on click ---
+            const isExpanded = userMenuButton.getAttribute('aria-expanded') === 'true';
+            userMenuButton.setAttribute('aria-expanded', !isExpanded);
+            
             userMenu.classList.toggle("open");
-});
+        });
+
         document.addEventListener("click", (e) => {
             if (userMenu.classList.contains("open") && !userMenu.contains(e.target)) {
                 userMenu.classList.remove("open");
+
+                // --- FIX: Reset ARIA attribute when closing ---
+                userMenuButton.setAttribute('aria-expanded', 'false');
             }
         });
     }
@@ -89,6 +95,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const primaryNav = document.querySelector('.primary-navigation');
     if(menuToggle && primaryNav) {
         menuToggle.addEventListener('click', () => {
+            const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+            menuToggle.setAttribute('aria-expanded', !isExpanded);
             primaryNav.classList.toggle('open');
         });
     }
