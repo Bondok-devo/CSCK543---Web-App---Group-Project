@@ -32,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Attempt to log the user in.
     if (login($pdo, $email_input, $password)) {
         // On success, redirect to the account page.
-        // This now works because no HTML has been sent yet.
         header('Location: account.php');
         exit;
     } else {
@@ -45,7 +44,7 @@ require_once __DIR__ . '/../src/includes/header.php';
 ?>
 
 <div class="auth-container">
-    <form class="auth-form" action="login.php" method="post">
+    <form class="auth-form" action="login.php" method="post" novalidate>
         <h2>Sign In</h2>
 
         <?php if (isset($errors['credentials'])): ?>

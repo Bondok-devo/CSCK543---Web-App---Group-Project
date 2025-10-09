@@ -26,7 +26,7 @@ if (current_user_id()) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
 
-    // Sanitize and validate inputs.
+    // Sanitise and validate inputs.
     $inputs['name'] = trim($_POST['name'] ?? '');
     $inputs['email'] = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -75,7 +75,7 @@ require_once __DIR__ . '/../src/includes/header.php';
 ?>
 
 <div class="auth-container">
-    <form class="auth-form" action="register.php" method="post">
+    <form class="auth-form" action="register.php" method="post" novalidate>
         <h2>Create an Account</h2>
         <p>Join our community to save your favourite recipes.</p>
 

@@ -425,6 +425,7 @@ h2 {
     stroke: #c0392b;
 }
 
+
 /* ============
    Account & Login Forms & General Form Styles
    ============ */
@@ -580,11 +581,10 @@ footer {
 @media (min-width: 900px) {
     .sidebar {
         position: sticky;
-        top: 100px; /* Offset from top to account for header */
+        top: 100px;
         align-self: start;
-        /* --- SCROLLABILITY FIX --- */
-        max-height: calc(100vh - 120px); /* Full height minus top offset & some padding */
-        overflow-y: auto; /* Add vertical scrollbar ONLY when its content is too tall */
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
     }
     .mobile-only-submit {
         display: none;
@@ -628,6 +628,17 @@ footer {
    ============ */
 .section-title-spacing {
     margin-top: 3rem;
+}
+
+.search-header {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 2rem; /* BUG FIX: Added margin to prevent overlap */
+}
+.search-header h2 {
+    margin-bottom: 1rem;
 }
 
 .steps-list {
@@ -862,7 +873,7 @@ footer {
     border-radius: 50%;
 }
 input:checked + .slider {
-    background-color: #2196F3; /* Blue when on */
+    background-color: #2196F3;
 }
 input:focus + .slider {
     box-shadow: 0 0 1px #2196F3;
