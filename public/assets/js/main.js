@@ -66,14 +66,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ========= USER DROPDOWN MENU (CORRECTED) =========
+    // ========= USER DROPDOWN MENU =========
     const userMenu = document.querySelector(".user-menu");
     if (userMenu) {
         const userMenuButton = userMenu.querySelector(".user-menu-button");
         userMenuButton.addEventListener("click", (e) => {
             e.stopPropagation();
-            
-            // --- FIX: Toggle ARIA attribute on click ---
             const isExpanded = userMenuButton.getAttribute('aria-expanded') === 'true';
             userMenuButton.setAttribute('aria-expanded', !isExpanded);
             
@@ -83,8 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.addEventListener("click", (e) => {
             if (userMenu.classList.contains("open") && !userMenu.contains(e.target)) {
                 userMenu.classList.remove("open");
-
-                // --- FIX: Reset ARIA attribute when closing ---
                 userMenuButton.setAttribute('aria-expanded', 'false');
             }
         });
