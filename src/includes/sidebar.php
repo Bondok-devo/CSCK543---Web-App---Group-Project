@@ -11,13 +11,11 @@ if ($user_id) {
     } catch (PDOException $e) { /* Silently fail */ }
 }
 
-// Get filters from the URL and ensure they are integers.
 $applied_cat_filters = array_map('intval', $_GET['categories'] ?? []);
 $applied_diff_filter = $_GET['difficulty'] ?? '';
 $applied_rating_filter = $_GET['rating'] ?? 0;
 $is_category_open = $_GET['category_open'] ?? 0;
 
-// Determine if the toggle should be in the "on" state.
 $are_prefs_applied = false;
 if (!empty($user_preferences) && !empty($applied_cat_filters)) {
     $sorted_prefs = $user_preferences;
@@ -38,14 +36,14 @@ try {
 ?>
 
 <div class="mobile-filter-trigger">
-    <button id="open-filter-btn" class="button button-secondary">Filter Recipes</button>
+    <button id="open-filter-btn" class="button button-secondary" aria-haspopup="dialog">Filter Recipes</button>
 </div>
 
-<aside class="sidebar" id="filter-sidebar">
+<aside class="sidebar" id="filter-sidebar" role="dialog" aria-modal="true" aria-labelledby="filter-sidebar-heading">
     <div class="sidebar-widget">
         <div class="sidebar-header">
-            <h3>Filter Recipes</h3>
-            <button id="close-filter-btn" class="close-btn">&times;</button>
+            <h3 id="filter-sidebar-heading">Filter Recipes</h3>
+            <button id="close-filter-btn" class="close-btn" aria-label="Close filters">&times;</button>
         </div>
         
         <form id="filter-form" action="results.php" method="get">
