@@ -725,14 +725,15 @@ footer {
     background: #343a40; color: #fff; border-color: #343a40;
 }
 
-.filter-group summary { cursor: pointer; list-style: none; user-select: none; }
-.filter-group summary::-webkit-details-marker { display: none; }
-.filter-group summary h3::after { content: ' ▼'; font-size: 0.8em; display: inline-block; margin-left: 0.5rem; }
-.filter-group[open] summary h3::after { content: ' ▲'; }
-.radio-filter-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.radio-filter-group label { padding: 0.4rem 0.8rem; border: 1px solid #ced4da; border-radius: 50px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
-.radio-filter-group input[type="radio"] { display: none; }
-.radio-filter-group input[type="radio"]:checked + label { background-color: #343a40; color: #fff; border-color: #343a40; }
+.filter-group summary { cursor: pointer; list-style: none; user-select: none; } 
+.filter-group summary::-webkit-details-marker { display: none; } 
+.filter-group summary h3::after { content: ' ▼'; font-size: 0.8em; display: inline-block; margin-left: 0.5rem; } 
+.filter-group[open] summary h3::after { content: ' ▲'; } 
+.radio-filter-group { display: flex; flex-wrap: wrap; gap: 0.5rem; } 
+.radio-filter-group label { padding: 0.4rem 0.8rem; border: 1px solid #ced4da; border-radius: 50px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; } 
+.radio-filter-group input[type="radio"] { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; } 
+.radio-filter-group input[type="radio"]:checked + label { background-color: #343a40; color: #fff; border-color: #343a40; } 
+.radio-filter-group input[type="radio"]:focus + label { outline: 2px solid #D96D00; outline-offset: 2px; }
 
 .star-rating {
     display: flex;
@@ -869,4 +870,5 @@ input:focus + .slider {
 }
 input:checked + .slider:before {
     transform: translateX(22px);
+
 }
