@@ -11,13 +11,11 @@ if ($user_id) {
     } catch (PDOException $e) { /* Silently fail */ }
 }
 
-// Get filters from the URL and ensure they are integers.
 $applied_cat_filters = array_map('intval', $_GET['categories'] ?? []);
 $applied_diff_filter = $_GET['difficulty'] ?? '';
 $applied_rating_filter = $_GET['rating'] ?? 0;
 $is_category_open = $_GET['category_open'] ?? 0;
 
-// Determine if the toggle should be in the "on" state.
 $are_prefs_applied = false;
 if (!empty($user_preferences) && !empty($applied_cat_filters)) {
     $sorted_prefs = $user_preferences;
@@ -38,14 +36,14 @@ try {
 ?>
 
 <div class="mobile-filter-trigger">
-    <button id="open-filter-btn" class="button button-secondary">Filter Recipes</button>
+    <button id="open-filter-btn" class="button button-secondary" aria-haspopup="dialog">Filter Recipes</button>
 </div>
 
-<aside class="sidebar" id="filter-sidebar">
+<aside class="sidebar" id="filter-sidebar" aria-labelledby="filter-sidebar-heading">
     <div class="sidebar-widget">
         <div class="sidebar-header">
-            <h3>Filter Recipes</h3>
-            <button id="close-filter-btn" class="close-btn">&times;</button>
+            <h3 id="filter-sidebar-heading">Filter Recipes</h3>
+            <button id="close-filter-btn" class="close-btn" aria-label="Close filters">&times;</button>
         </div>
         
         <form id="filter-form" action="results.php" method="get">
@@ -69,29 +67,45 @@ try {
 
             <div class="filter-group">
                 <h3>Difficulty</h3>
-                <div class="radio-filter-group">
-                    <input type="radio" id="diff_any" name="difficulty" value="" <?= empty($applied_diff_filter) ? 'checked' : '' ?>>
-                    <label for="diff_any">Any</label>
-                    <input type="radio" id="diff_easy" name="difficulty" value="Easy" <?= $applied_diff_filter == 'Easy' ? 'checked' : '' ?>>
-                    <label for="diff_easy">Easy</label>
-                    <input type="radio" id="diff_medium" name="difficulty" value="Medium" <?= $applied_diff_filter == 'Medium' ? 'checked' : '' ?>>
-                    <label for="diff_medium">Medium</label>
-                    <input type="radio" id="diff_hard" name="difficulty" value="Hard" <?= $applied_diff_filter == 'Hard' ? 'checked' : '' ?>>
-                    <label for="diff_hard">Hard</label>
+                <div class="filter-options-group">
+                    <div class="filter-option">
+                        <input type="radio" id="diff_any" name="difficulty_any" data-group="difficulty" value="" <?= empty($applied_diff_filter) ? 'checked' : '' ?>>
+                        <label for="diff_any">Any</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="diff_easy" name="difficulty_easy" data-group="difficulty" value="Easy" <?= $applied_diff_filter == 'Easy' ? 'checked' : '' ?>>
+                        <label for="diff_easy">Easy</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="diff_medium" name="difficulty_medium" data-group="difficulty" value="Medium" <?= $applied_diff_filter == 'Medium' ? 'checked' : '' ?>>
+                        <label for="diff_medium">Medium</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="diff_hard" name="difficulty_hard" data-group="difficulty" value="Hard" <?= $applied_diff_filter == 'Hard' ? 'checked' : '' ?>>
+                        <label for="diff_hard">Hard</label>
+                    </div>
                 </div>
             </div>
             
             <div class="filter-group">
                 <h3>Minimum Rating</h3>
-                <div class="radio-filter-group">
-                    <input type="radio" id="rating_any" name="rating" value="0" <?= empty($applied_rating_filter) ? 'checked' : '' ?>>
-                    <label for="rating_any">Any</label>
-                    <input type="radio" id="rating_4" name="rating" value="4" <?= $applied_rating_filter == 4 ? 'checked' : '' ?>>
-                    <label for="rating_4">4+</label>
-                    <input type="radio" id="rating_3" name="rating" value="3" <?= $applied_rating_filter == 3 ? 'checked' : '' ?>>
-                    <label for="rating_3">3+</label>
-                    <input type="radio" id="rating_2" name="rating" value="2" <?= $applied_rating_filter == 2 ? 'checked' : '' ?>>
-                    <label for="rating_2">2+</label>
+                <div class="filter-options-group">
+                    <div class="filter-option">
+                        <input type="radio" id="rating_any" name="rating_any" data-group="rating" value="0" <?= empty($applied_rating_filter) ? 'checked' : '' ?>>
+                        <label for="rating_any">Any</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="rating_4" name="rating_4" data-group="rating" value="4" <?= $applied_rating_filter == 4 ? 'checked' : '' ?>>
+                        <label for="rating_4">4+</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="rating_3" name="rating_3" data-group="rating" value="3" <?= $applied_rating_filter == 3 ? 'checked' : '' ?>>
+                        <label for="rating_3">3+</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="rating_2" name="rating_2" data-group="rating" value="2" <?= $applied_rating_filter == 2 ? 'checked' : '' ?>>
+                        <label for="rating_2">2+</label>
+                    </div>
                 </div>
             </div>
             
