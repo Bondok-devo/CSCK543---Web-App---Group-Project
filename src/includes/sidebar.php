@@ -39,7 +39,7 @@ try {
     <button id="open-filter-btn" class="button button-secondary" aria-haspopup="dialog">Filter Recipes</button>
 </div>
 
-<aside class="sidebar" id="filter-sidebar" role="dialog" aria-modal="true" aria-labelledby="filter-sidebar-heading">
+<aside class="sidebar" id="filter-sidebar" aria-labelledby="filter-sidebar-heading">
     <div class="sidebar-widget">
         <div class="sidebar-header">
             <h3 id="filter-sidebar-heading">Filter Recipes</h3>
