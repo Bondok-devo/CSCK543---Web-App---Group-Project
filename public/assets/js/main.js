@@ -1,50 +1,60 @@
 document.addEventListener("DOMContentLoaded", () => {
-    
-    // ========= PREFERENCE TOGGLE =========
-    const prefToggle = document.getElementById('pref-toggle');
-    if (prefToggle) {
-        const userPreferences = JSON.parse(prefToggle.dataset.preferences || '[]');
-        const filterForm = document.getElementById('filter-form');
-        const categoryCheckboxes = filterForm.querySelectorAll('input[name="categories[]"]');
+    const filterForm = document.getElementById('filter-form');
 
-        prefToggle.addEventListener('change', () => {
-            categoryCheckboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            });
+    // ========= FILTER FORM LOGIC =========
+    if (filterForm) {
+        filterForm.addEventListener('change', (e) => {
+            const target = e.target;
 
-            if (prefToggle.checked && userPreferences.length > 0) {
-                userPreferences.forEach(prefId => {
-                    const checkboxToSelect = filterForm.querySelector(`input[name="categories[]"][value="${prefId}"]`);
-                    if (checkboxToSelect) {
-                        checkboxToSelect.checked = true;
+            if (target.type === 'checkbox') {
+                if (target.id === 'pref-toggle') {
+                    const prefToggle = target;
+                    const userPreferences = JSON.parse(prefToggle.dataset.preferences || '[]');
+                    const categoryCheckboxes = filterForm.querySelectorAll('input[name="categories[]"]');
+                    
+                    categoryCheckboxes.forEach(checkbox => checkbox.checked = false);
+
+                    if (prefToggle.checked && userPreferences.length > 0) {
+                        userPreferences.forEach(prefId => {
+                            const checkbox = filterForm.querySelector(`input[name="categories[]"][value="${prefId}"]`);
+                            if (checkbox) checkbox.checked = true;
+                        });
                     }
-                });
+                }
+                if (window.innerWidth >= 900) {
+                    filterForm.submit();
+                }
             }
             
-            if (window.innerWidth >= 900) {
-                filterForm.submit();
-            }
-        });
-    }
+            if (target.type === 'radio' && target.dataset.group) {
+                const groupName = target.dataset.group;
+                
+                const radiosInGroup = filterForm.querySelectorAll(`input[type="radio"][data-group="${groupName}"]`);
+                radiosInGroup.forEach(radio => {
+                    if (radio !== target) {
+                        radio.checked = false;
+                    }
+                });
 
-    // Auto-submit filter form on desktop only
-    const filterForm = document.getElementById('filter-form');
-    if (filterForm && window.innerWidth >= 900) {
-        const submitButton = filterForm.querySelector('.mobile-only-submit');
-        if (submitButton) {
-            submitButton.style.display = 'none';
-        }
+                radiosInGroup.forEach(radio => {
+                    radio.name = (radio.checked) ? groupName : '';
+                });
 
-        filterForm.addEventListener('change', (e) => {
-            if (e.target.id !== 'pref-toggle') {
-                setTimeout(() => {
+                if (window.innerWidth >= 900) {
                     filterForm.submit();
-                }, 100);
+                }
             }
         });
+
+        if (window.innerWidth >= 900) {
+            const submitButton = filterForm.querySelector('.mobile-only-submit');
+            if (submitButton) {
+                submitButton.style.display = 'none';
+            }
+        }
     }
 
-    // Remember collapsible category state
+    // ========= COLLAPSIBLE CATEGORY STATE =========
     const categoryDetails = document.getElementById('category-details');
     const categoryOpenInput = document.getElementById('category_open_input');
     if (categoryDetails && categoryOpenInput) {
@@ -74,10 +84,8 @@ document.addEventListener("DOMContentLoaded", () => {
             e.stopPropagation();
             const isExpanded = userMenuButton.getAttribute('aria-expanded') === 'true';
             userMenuButton.setAttribute('aria-expanded', !isExpanded);
-            
             userMenu.classList.toggle("open");
         });
-
         document.addEventListener("click", (e) => {
             if (userMenu.classList.contains("open") && !userMenu.contains(e.target)) {
                 userMenu.classList.remove("open");
@@ -109,4 +117,30 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    // ========= STAR RATING KEYBOARD NAVIGATION =========
+    const starRatings = document.querySelectorAll('.star-rating');
+    starRatings.forEach(ratingWidget => {
+        const radios = Array.from(ratingWidget.querySelectorAll('input[type="radio"]'));
+        
+        ratingWidget.addEventListener('keydown', (e) => {
+            const currentIndex = radios.findIndex(radio => radio === document.activeElement);
+            if (currentIndex === -1) return;
+
+            let nextIndex = -1;
+
+            if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                nextIndex = Math.max(0, currentIndex - 1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                nextIndex = Math.min(radios.length - 1, currentIndex + 1);
+            }
+
+            if (nextIndex !== -1) {
+                radios[nextIndex].focus();
+                radios[nextIndex].checked = true;
+            }
+        });
+    });
 });

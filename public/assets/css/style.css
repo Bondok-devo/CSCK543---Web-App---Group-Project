@@ -88,7 +88,6 @@ body {
     background-color: #9A4D00;
 }
 
-/* User Dropdown Menu */
 .user-menu {
     position: relative;
 }
@@ -425,7 +424,6 @@ h2 {
     stroke: #c0392b;
 }
 
-
 /* ============
    Account & Login Forms & General Form Styles
    ============ */
@@ -635,7 +633,7 @@ footer {
     padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    margin-bottom: 2rem; /* BUG FIX: Added margin to prevent overlap */
+    margin-bottom: 2rem;
 }
 .search-header h2 {
     margin-bottom: 1rem;
@@ -726,7 +724,15 @@ footer {
     gap: 0.75rem;
     margin-bottom: 1.5rem;
 }
-.preference-option input[type="checkbox"] { display: none; }
+.preference-option input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
 .preference-option label {
     display: block; padding: 0.5rem 1rem; border: 1px solid #ced4da;
     border-radius: 50px; cursor: pointer; text-align: center; transition: all 0.2s;
@@ -735,15 +741,57 @@ footer {
 .preference-option input[type="checkbox"]:checked + label {
     background: #343a40; color: #fff; border-color: #343a40;
 }
+.preference-option input[type="checkbox"]:focus-visible + label {
+    outline: 2px solid #D96D00;
+    outline-offset: 2px;
+}
 
 .filter-group summary { cursor: pointer; list-style: none; user-select: none; }
 .filter-group summary::-webkit-details-marker { display: none; }
 .filter-group summary h3::after { content: ' ▼'; font-size: 0.8em; display: inline-block; margin-left: 0.5rem; }
 .filter-group[open] summary h3::after { content: ' ▲'; }
-.radio-filter-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.radio-filter-group label { padding: 0.4rem 0.8rem; border: 1px solid #ced4da; border-radius: 50px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
-.radio-filter-group input[type="radio"] { display: none; }
-.radio-filter-group input[type="radio"]:checked + label { background-color: #343a40; color: #fff; border-color: #343a40; }
+
+.filter-options-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+#category-details .filter-option {
+    width: 100%;
+}
+
+.filter-options-group .filter-option label {
+    padding: 0.4rem 0.8rem;
+    border: 1px solid #ced4da;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    display: inline-block;
+    margin-left: 0;
+}
+
+.filter-options-group .filter-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
+
+.filter-options-group .filter-option input[type="radio"]:checked + label {
+    background-color: #343a40;
+    color: #fff;
+    border-color: #343a40;
+}
+
+.filter-options-group .filter-option input[type="radio"]:focus-visible + label {
+    outline: 2px solid #D96D00;
+    outline-offset: 2px;
+}
 
 .star-rating {
     display: flex;
@@ -751,7 +799,18 @@ footer {
     justify-content: flex-end;
 }
 .star-rating input[type="radio"] {
-    display: none;
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
+.star-rating input[type="radio"]:focus-visible + label {
+    outline: 2px solid #D96D00;
+    outline-offset: 2px;
+    border-radius: 4px;
 }
 .star-rating label {
     font-size: 2.5rem;
@@ -875,8 +934,9 @@ footer {
 input:checked + .slider {
     background-color: #2196F3;
 }
-input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+input:focus-visible + .slider {
+    outline: 2px solid #D96D00;
+    outline-offset: 2px;
 }
 input:checked + .slider:before {
     transform: translateX(22px);
